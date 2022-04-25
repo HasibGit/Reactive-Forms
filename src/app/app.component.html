@@ -1,0 +1,75 @@
+<div class="container">
+  <div class="row">
+    <div class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1 col-md-offset-2">
+
+      <!-- Here we used property binding to sync the ts form code with this particular form  -->
+      <!-- For each input, the 'formControlName' needs to be same as we defined in our ts file  -->
+      <form [formGroup]="signUpForm" (ngSubmit)="onSubmit()">
+
+        <!-- Using formGroupName we can nest multiple controls  -->
+        <div formGroupName="userData">
+          <div class="form-group">
+            <label for="username">Username</label>
+            <input
+              type="text"
+              id="username"
+              class="form-control"
+              formControlName="username"
+            >
+            <!-- If the username field is invalid and touched  -->
+            <span class="text-danger" *ngIf="!signUpForm.get('userData.username').valid && signUpForm.get('userData.username').touched">
+              
+              <!-- Showing custom message based on custom validator. In the controls errors array, we will find 'invalidUsername': true -->
+              <span class="text-danger" *ngIf="signUpForm.get('userData.username').errors?.invalidUsername">Invalid username. Names 'Reaz' and 'Naim' are forbidden</span>
+              
+              <!-- Another custom check for empty field  -->
+              <span class="text-danger" *ngIf="signUpForm.get('userData.username').errors?.required">This field cannot be empty</span>
+
+            </span>
+            
+      
+          </div>
+          <div class="form-group">
+            <label for="email">email</label>
+            <input
+              type="text"
+              id="email"
+              class="form-control"
+              formControlName="email"
+            >
+            <span class="text-danger" *ngIf="!signUpForm.get('userData.email').valid && signUpForm.get('userData.email').touched">Please enter a valid email</span>
+          </div>
+        </div>
+
+        <div>
+          <h4>Enter your hobbies: </h4>
+
+          <!-- Using FormArray to dynamically add form fields into our form  -->
+          <button type="button" class="btn btn-info" (click)="addHobby()">Add Hobby</button>
+
+          <div formArrayName="hobbies" *ngFor="let hobbyControl of getControls(); let i = index">
+            <!-- In the FormArray 'hobbies', the control names will be 0, 1, 2, 3 ..  -->
+              <input type="text" [formControlName]="i" class="form-control" placeholder="Enter hobby">
+          </div>
+
+        </div>
+
+        
+        <div class="radio" *ngFor="let gender of genders">
+          <label>
+            <input
+              type="radio"
+              [value]="gender"
+              formControlName="gender"
+            >
+            {{ gender }}
+          </label>
+        </div>
+
+        <p class="text-danger" *ngIf="!signUpForm.valid && signUpForm.touched">Invalid form data. Enter valid information.</p>
+
+        <button class="btn btn-primary" type="submit">Submit</button>
+      </form>
+    </div>
+  </div>
+</div>
